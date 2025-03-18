@@ -1,5 +1,6 @@
 
 import "./App.css";
+import "./componentsCss/AllTheBooks.css";
 import MyNav from "./components/MyNav";
 import MyFooter from "./components/MyFooter"
 import Welcome from "./components/Welcome"
