@@ -1,8 +1,9 @@
-import { Navbar, Nav, } from "react-bootstrap"
+import { Navbar, Nav, Container } from "react-bootstrap"
 
 const MyNav = () => {
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
+             <Container>
             <Navbar.Brand href="#">Epicbooks</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" >
@@ -11,7 +12,9 @@ const MyNav = () => {
                     <Nav.Link href="#">About</Nav.Link>
                     <Nav.Link href="#">Browse</Nav.Link>
                 </Nav>
+                
             </Navbar.Collapse>
+            </Container>
         </Navbar>
     );
 };
