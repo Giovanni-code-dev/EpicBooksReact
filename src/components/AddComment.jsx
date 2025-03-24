@@ -53,7 +53,7 @@ const AddComment = ({ bookAsin, setComments }) => {
             </Form.Group>
 
             <Form.Group className="mb-2">
-                <Form.Label>Valutazione (1-5):</Form.Label>
+                <Form.Label>Valutazione (1 5):</Form.Label>
                 <Form.Select value={rating} onChange={(e) => setRating(e.target.value)}>
                     <option value="1">1 </option>
                     <option value="2">2 </option>
