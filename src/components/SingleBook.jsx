@@ -1,23 +1,30 @@
-import { Card, Col } from "react-bootstrap";
-import { useState } from "react";
-import CommentArea from "./CommentArea";
+import { Button, Card } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 
-const SingleBook = ({ book, selected, setSelected }) => {
-    return (
-        <Col xs={6} md={3} lg={2}>
-            <Card
-                onClick={() => setSelected(selected === book.asin ? null : book.asin)}
-                className={`mb-4 h-auto ${selected === book.asin ? 'border-1 border-danger text-danger bg-dark' : ''}`}
-            >
-                <Card.Img className="imageBook" variant="top" src={book.img} />
-                <Card.Body>
-                    <Card.Title>{book.title}</Card.Title>
-                </Card.Body>
-            </Card>
+const SingleBook = ({ setSelected, selected, book }) => {
+  const navigate = useNavigate()
 
-            {selected === book.asin && <CommentArea bookAsin={book.asin} />}
-        </Col>
-    );
-};
+  return (
+    <>
+      <Card
+        onClick={() => setSelected(book.asin)}
+        style={{
+          border: selected === book.asin ? '3px solid red' : 'none',
+        }}
+      >
+        <Card.Img variant="top" src={book.img} />
+        <Card.Body>
+          <Card.Title style={{ color: 'black' }}>{book.title}</Card.Title>
+          <Button
+            className="w-100 mt-2"
+            onClick={() => navigate(`/details/${book.asin}`)}
+          >
+            VAI AI DETTAGLI
+          </Button>
+        </Card.Body>
+      </Card>
+    </>
+  )
+}
 
-export default SingleBook;
+export default SingleBook

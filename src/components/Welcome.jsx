@@ -1,11 +1,13 @@
-import { Alert } from "react-bootstrap";
+import { Alert } from 'react-bootstrap'
 
-const Welcome = () => {
-    return (
-<Alert bg="dark" variant="dark" className="text-center">
-    <h1>Benvenuto su EpicBooks</h1>
-    <p>Esplora la nostra selva oscura</p>
-</Alert>
-    );
-};
-export default Welcome;
+const Welcome = ({ title }) => (
+  <Alert className="text-center">
+    {title ? (
+      <h1>{title}</h1>
+    ) : (
+      <h1 data-testid="welcome-title">Benvenuti in EpiBooks!</h1>
+    )}
+  </Alert>
+)
+
+export default Welcome

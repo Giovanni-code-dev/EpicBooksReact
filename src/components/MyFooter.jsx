@@ -1,10 +1,10 @@
-const MyFooter = () => {
-return (
-    <footer className="bg-dark text-white text-center p-3 mt-4">
-        <p>&copy; 2025 EpicBooks. All rigths reserved.</p>
+const MyFooter = () => (
+    <footer className="d-flex bg-dark mt-2">
+      <span className="text-white m-auto p-2">
+        <strong>EPICODE</strong> - Copyright {new Date().getFullYear()}
+      </span>
     </footer>
-   
-    );
-};
-
-export default MyFooter;
+  )
+  
+  export default MyFooter
+  

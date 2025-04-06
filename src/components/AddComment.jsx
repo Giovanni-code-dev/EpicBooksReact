@@ -1,73 +1,93 @@
-import { useState } from "react";
-import { Form, Button, Alert } from "react-bootstrap";
+import { useEffect, useState } from 'react'
+import { Button, Form } from 'react-bootstrap'
 
-const AddComment = ({ bookAsin, setComments }) => {
-    const [comment, setComment] = useState("");
-    const [rating, setRating] = useState(1);
-    const [error, setError] = useState("");
+const AddComment = ({ asin, refresh }) => {
+  const [comment, setComment] = useState({
+    comment: '',
+    rate: 1,
+    elementId: null,
+  })
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  useEffect(() => {
+    setComment((c) => ({
+      ...c,
+      elementId: asin,
+    }))
+  }, [asin])
 
-        const newComment = {
-            comment: comment,
-            rate: rating,
-            elementId: bookAsin,
-        };
-
-        fetch("https://striveschool-api.herokuapp.com/api/comments", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JjZGZlZmU3MDMzNzAwMTUzMTZkZDciLCJpYXQiOjE3NDI1NzgwNzMsImV4cCI6MTc0Mzc4NzY3M30.kwN9PuHroLs1wj9mu8v0ycP-Eu-Wo9PEyNWBY2x3KKw"
-            },
-            body: JSON.stringify(newComment),
+  const sendComment = async (e) => {
+    e.preventDefault()
+    try {
+      let response = await fetch(
+        'https://striveschool-api.herokuapp.com/api/comments',
+        {
+          method: 'POST',
+          body: JSON.stringify(comment),
+          headers: {
+            'Content-type': 'application/json',
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JjZGZlZmU3MDMzNzAwMTUzMTZkZDciLCJpYXQiOjE3NDM5NjMwNzUsImV4cCI6MTc0NTE3MjY3NX0.3a41C_h1eBeAyu5Zg78YUsvJZGf9U6R11eChU-2fi5s",
+          },
+        }
+      )
+      if (response.ok) {
+        alert('Recensione inviata!')
+        setComment({
+          comment: '',
+          rate: 1,
+          elementId: null,
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Errore nell'invio del commento");
-                }
-                return response.json();
-            })
-            .then(data => {
-                setComments(prevComments => [...prevComments, data]);
-                setComment(""); // Resetta il form dopo l'invio
-                setRating(1);
-            })
-            .catch(err => setError(err.message));
-    };
+        refresh && refresh() // ✅ chiama la funzione per aggiornare la lista
+      } else {
+        throw new Error('Qualcosa è andato storto')
+      }
+    } catch (error) {
+      alert(error)
+    }
+  }
 
-    return (
-        <Form onSubmit={handleSubmit} className="mt-3">
-            {error && <Alert variant="danger">{error}</Alert>}
-            
-            <Form.Group className="mb-2">
-                <Form.Label>Scrivi un commento:</Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="Inserisci il tuo commento"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    
-                />
-            </Form.Group>
+  return (
+    <div className="my-3">
+      <Form onSubmit={sendComment}>
+        <Form.Group className="mb-2">
+          <Form.Label>Recensione</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Inserisci qui il testo"
+            value={comment.comment}
+            onChange={(e) =>
+              setComment({
+                ...comment,
+                comment: e.target.value,
+              })
+            }
+          />
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>Valutazione</Form.Label>
+          <Form.Control
+            as="select"
+            value={comment.rate}
+            onChange={(e) =>
+              setComment({
+                ...comment,
+                rate: e.target.value,
+              })
+            }
+          >
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </Form.Control>
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Invia
+        </Button>
+      </Form>
+    </div>
+  )
+}
 
-            <Form.Group className="mb-2">
-                <Form.Label>Valutazione (1 5):</Form.Label>
-                <Form.Select value={rating} onChange={(e) => setRating(e.target.value)}>
-                    <option value="1">1 </option>
-                    <option value="2">2 </option>
-                    <option value="3">3 </option>
-                    <option value="4">4 </option>
-                    <option value="5">5 </option>
-                </Form.Select>
-            </Form.Group>
-
-            <Button type="submit" variant="primary">
-                Aggiungi Recensione
-            </Button>
-        </Form>
-    );
-};
-
-export default AddComment;
+export default AddComment

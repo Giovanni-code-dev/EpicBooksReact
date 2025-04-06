@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+
+.app-container.light {
+  background-color: #f8f9fa; /* colore chiaro */
+  color: #212529; /* testo scuro */
+  min-height: 100vh;
+  transition: all 0.3s ease;
+}
+
+.app-container.dark {
+  background-color: rgb(54, 16, 33);
+  color: #f8f9fa; /* testo chiaro */
+  min-height: 100vh;
+  transition: all 0.3s ease;
+}
