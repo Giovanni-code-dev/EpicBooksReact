@@ -35,20 +35,19 @@ const CommentArea = ({ asin }) => {
     } finally {
       setIsLoading(false)
     }
-  }, [asin]) // ✅ chiusura di useCallback
-
+  }, [asin]) 
   useEffect(() => {
     if (asin) {
       fetchComments()
     }
-  }, [fetchComments, asin]) // ✅ niente più warning
+  }, [fetchComments, asin]) 
 
   return (
     <div className="text-center">
       {isLoading && <Loading />}
       {isError && <Error />}
       <AddComment asin={asin} refresh={fetchComments} />
-      <CommentList commentsToShow={comments} refresh={fetchComments} /> {/* ✅ Passato! */}
+      <CommentList commentsToShow={comments} refresh={fetchComments} /> 
     </div>
   )
 }

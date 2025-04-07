@@ -8,6 +8,7 @@ const SingleBook = ({ setSelected, selected, book }) => {
     <>
       <Card
         onClick={() => setSelected(book.asin)}
+        className={selected === book.asin ? 'selected' : ''}
         style={{
           border: selected === book.asin ? '3px solid red' : 'none',
         }}

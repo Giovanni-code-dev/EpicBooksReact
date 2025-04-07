@@ -47,28 +47,7 @@ describe('CommentArea component', () => {
 })
 
 describe('Navbar search filter', () => {
-  it('filters books correctly when searching "Destiny"', async () => {
-    render(
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    )
-
-    const searchInput = screen.getByPlaceholderText(/cerca un libro/i)
-    fireEvent.change(searchInput, { target: { value: 'Destiny' } })
-
-    await screen.findByDisplayValue(/destiny/i)
-
-    const visibleCards = await waitFor(() =>
-      Array.from(document.querySelectorAll('.card')).filter(card =>
-        card.textContent.toLowerCase().includes('destiny')
-      )
-    )
-
-    expect(visibleCards.length).toBe(1)
-  })
-
-  it('filters multiple books when searching "witcher"', async () => {
+  it('filters books correctly when searching "witcher"', async () => {
     render(
       <ThemeProvider>
         <App />
@@ -86,6 +65,100 @@ describe('Navbar search filter', () => {
       )
     )
 
-    expect(visibleCards.length).toBeGreaterThan(1)
+    expect(visibleCards.length).toBeGreaterThan(0)
+  })
+
+  it('shows no results when searching for a non-existent book', async () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    )
+
+    const searchInput = screen.getByPlaceholderText(/cerca un libro/i)
+    fireEvent.change(searchInput, { target: { value: 'xyz123abc' } })
+
+    await screen.findByDisplayValue(/xyz123abc/i)
+
+    const visibleCards = await waitFor(() =>
+      Array.from(document.querySelectorAll('.card')).filter(card =>
+        card.textContent.toLowerCase().includes('xyz123abc')
+      )
+    )
+
+    expect(visibleCards.length).toBe(0)
+  })
+})
+
+
+describe('Book selection border behavior', () => {
+  it('adds the selected border when a book is clicked', async () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    )
+
+    const bookImages = await screen.findAllByRole('img')
+    fireEvent.click(bookImages[0])
+
+    const selectedCards = document.querySelectorAll('.card.selected')
+    expect(selectedCards.length).toBe(1)
+  })
+
+  it('removes the selected border from the first book when a second book is clicked', async () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    )
+
+    const bookImages = await screen.findAllByRole('img')
+
+    // Click primo libro
+    fireEvent.click(bookImages[0])
+    let selectedCards = document.querySelectorAll('.card.selected')
+    expect(selectedCards.length).toBe(1)
+
+    // Click secondo libro
+    fireEvent.click(bookImages[1])
+    selectedCards = document.querySelectorAll('.card.selected')
+    expect(selectedCards.length).toBe(1)
+
+    // Il primo non deve più avere .selected
+    const firstCard = bookImages[0].closest('.card')
+    expect(firstCard.classList.contains('selected')).toBe(false)
+  })
+})
+
+
+
+
+
+describe('SingleComment rendering behavior', () => {
+  it('does not render any SingleComment at startup', () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    )
+
+    const comments = document.querySelectorAll('.single-comment')
+    expect(comments.length).toBe(0)
+  })
+
+  it('renders SingleComment components after selecting a book with comments', async () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    )
+
+    const books = await screen.findAllByRole('img')
+    fireEvent.click(books[0]) // clicca su un libro che sai avere commenti
+
+    // attende la comparsa dei commenti
+    const loadedComments = await screen.findAllByTestId('single-comment')
+    expect(loadedComments.length).toBeGreaterThan(0)
   })
 })

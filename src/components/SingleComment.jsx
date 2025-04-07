@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, ListGroup } from 'react-bootstrap'
-import EditComment from './EditComment' // Assicurati che il path sia corretto
+import EditComment from './EditComment'
 
 const SingleComment = ({ comment, refresh }) => {
   const [isEditing, setIsEditing] = useState(false)
@@ -13,7 +13,7 @@ const SingleComment = ({ comment, refresh }) => {
           method: 'DELETE',
           headers: {
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JjZGZlZmU3MDMzNzAwMTUzMTZkZDciLCJpYXQiOjE3NDM5NjMwNzUsImV4cCI6MTc0NTE3MjY3NX0.3a41C_h1eBeAyu5Zg78YUsvJZGf9U6R11eChU-2fi5s",
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JjZGZlZmU3MDMzNzAwMTUzMTZkZDciLCJpYXQiOjE3NDM5NjMwNzUsImV4cCI6MTc0NTE3MjY3NX0.3a41C_h1eBeAyu5Zg78YUsvJZGf9U6R11eChU-2fi5s',
           },
         }
       )
@@ -29,7 +29,7 @@ const SingleComment = ({ comment, refresh }) => {
   }
 
   return (
-    <ListGroup.Item>
+    <ListGroup.Item data-testid="single-comment">
       {isEditing ? (
         <EditComment
           comment={comment}
