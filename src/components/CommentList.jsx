@@ -7,7 +7,7 @@ const CommentList = ({ commentsToShow, refresh }) => (
       <SingleComment
         comment={comment}
         key={comment._id}
-        refresh={refresh} // ✅ Passaggio chiave!
+        refresh={refresh} // Passaggio chiave!
       />
     ))}
   </ListGroup>

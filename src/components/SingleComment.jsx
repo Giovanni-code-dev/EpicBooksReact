@@ -6,8 +6,11 @@ const SingleComment = ({ comment, refresh }) => {
   const [isEditing, setIsEditing] = useState(false)
 
   const deleteComment = async (asin) => {
+    const confirmed = window.confirm('Sei sicuro di voler eliminare questo commento?')
+    if (!confirmed) return
+
     try {
-      let response = await fetch(
+      const response = await fetch(
         'https://striveschool-api.herokuapp.com/api/comments/' + asin,
         {
           method: 'DELETE',

@@ -39,7 +39,7 @@ const AddComment = ({ asin, refresh }) => {
         })
         refresh && refresh()
       } else {
-        throw new Error('Qualcosa è andato storto')
+        throw new Error('Inserisci un commento prima!!!!!')
       }
     } catch (error) {
       alert(error)
