@@ -1,9 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import App from './App'
 import ThemeProvider from './context/ThemeContext'
 import fantasy from './data/fantasy.json'
-
-import { BrowserRouter } from 'react-router-dom'
 
 describe('Welcome component', () => {
   it('renders the Welcome component with default text', () => {
@@ -18,41 +16,76 @@ describe('Welcome component', () => {
   })
 })
 
-
-
 describe('Card rendering', () => {
-  it('renders the correct number of book cards from fantasy.json', () => {
+  it('renders at least one book card', () => {
     render(
       <ThemeProvider>
         <App />
       </ThemeProvider>
     )
 
-    // le card bootstrap hanno la classe `card`, quindi uso getElementsByClassName
     const allCards = document.getElementsByClassName('card')
+    expect(allCards.length).toBeGreaterThan(0)
     expect(allCards.length).toBe(fantasy.length)
   })
 })
-
 
 describe('CommentArea component', () => {
   it('renders CommentArea after selecting a book', async () => {
     render(
       <ThemeProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <App />
       </ThemeProvider>
     )
 
-    // Troviamo la prima immagine di un libro (clickable)
-    const firstBookImage = await screen.findAllByRole('img')
-    fireEvent.click(firstBookImage[0]) // Simula il click
+    const bookImages = await screen.findAllByRole('img')
+    fireEvent.click(bookImages[0])
 
-    // Aspettiamo che venga visualizzato un elemento di CommentArea
-    const commentLabel = await screen.findByText(/recensione/i)
+    const commentForm = await screen.findByLabelText(/recensione/i)
+    expect(commentForm).toBeInTheDocument()
+  })
+})
 
-    // Verifica che il componente CommentArea sia effettivamente montato
-    expect(commentLabel).toBeInTheDocument()
+describe('Navbar search filter', () => {
+  it('filters books correctly when searching "Destiny"', async () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    )
+
+    const searchInput = screen.getByPlaceholderText(/cerca un libro/i)
+    fireEvent.change(searchInput, { target: { value: 'Destiny' } })
+
+    await screen.findByDisplayValue(/destiny/i)
+
+    const visibleCards = await waitFor(() =>
+      Array.from(document.querySelectorAll('.card')).filter(card =>
+        card.textContent.toLowerCase().includes('destiny')
+      )
+    )
+
+    expect(visibleCards.length).toBe(1)
+  })
+
+  it('filters multiple books when searching "witcher"', async () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    )
+
+    const searchInput = screen.getByPlaceholderText(/cerca un libro/i)
+    fireEvent.change(searchInput, { target: { value: 'witcher' } })
+
+    await screen.findByDisplayValue(/witcher/i)
+
+    const visibleCards = await waitFor(() =>
+      Array.from(document.querySelectorAll('.card')).filter(card =>
+        card.textContent.toLowerCase().includes('witcher')
+      )
+    )
+
+    expect(visibleCards.length).toBeGreaterThan(1)
   })
 })

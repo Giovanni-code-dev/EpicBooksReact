@@ -37,7 +37,7 @@ const AddComment = ({ asin, refresh }) => {
           rate: 1,
           elementId: null,
         })
-        refresh && refresh() // ✅ chiama la funzione per aggiornare la lista
+        refresh && refresh()
       } else {
         throw new Error('Qualcosa è andato storto')
       }
@@ -50,8 +50,9 @@ const AddComment = ({ asin, refresh }) => {
     <div className="my-3">
       <Form onSubmit={sendComment}>
         <Form.Group className="mb-2">
-          <Form.Label>Recensione</Form.Label>
+          <Form.Label htmlFor="comment-textarea">Recensione</Form.Label>
           <Form.Control
+            id="comment-textarea"
             type="text"
             placeholder="Inserisci qui il testo"
             value={comment.comment}
@@ -64,8 +65,9 @@ const AddComment = ({ asin, refresh }) => {
           />
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>Valutazione</Form.Label>
+          <Form.Label htmlFor="rate-select">Valutazione</Form.Label>
           <Form.Control
+            id="rate-select"
             as="select"
             value={comment.rate}
             onChange={(e) =>
